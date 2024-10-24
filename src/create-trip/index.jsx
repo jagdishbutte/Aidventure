@@ -1,9 +1,10 @@
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { SelectBudgetOptions, SelectTravelesList } from "../constants/options";
+import { AI_PROMPT, SelectBudgetOptions, SelectTravelesList } from "../constants/options";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
+import { chatSession } from "../service/AIModel";
 
 
 function CreateTrip() {
@@ -23,12 +24,22 @@ function CreateTrip() {
     console.log(formData)
   },[formData])
 
-  const onGenerateTrip=()=>{
+  const onGenerateTrip=async()=>{
     if(formData?.noOfDays>5 && !formData?.location || !formData?.budget || !formData?.traveler){
       toast("Please fill all details...")
       return ;
     }
-    console.log(formData);
+    const FINAL_PROMPT = AI_PROMPT
+    .replace('{location}',formData?.location.label)
+    .replace('{totalDays}',formData?.noOfDays)
+    .replace('{traveler}',formData?.traveler)
+    .replace('{budget}',formData?.budget)
+    .replace('{totalDays}',formData?.noOfDays)
+    
+    console.log(FINAL_PROMPT);
+    const result = await chatSession.sendMessage(FINAL_PROMPT)
+
+    console.log(result?.response?.text())
   }
 
   return (
