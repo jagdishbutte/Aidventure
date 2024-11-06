@@ -20,11 +20,15 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { doc, setDoc } from "firebase/firestore";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { db } from "../service/firebaseConfig";
 
 function CreateTrip() {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -38,8 +42,8 @@ function CreateTrip() {
   }, [formData]);
 
   const login = useGoogleLogin({
-    onSuccess:(codeResp) => getUserProfile(codeResp),
-    onError:(error) => console.log(error),
+    onSuccess: (codeResp) => getUserProfile(codeResp),
+    onError: (error) => console.log(error),
   });
 
   const onGenerateTrip = async () => {
@@ -58,6 +62,7 @@ function CreateTrip() {
       toast("Please fill all details...");
       return;
     }
+    setLoading(true);
     const FINAL_PROMPT = AI_PROMPT.replace(
       "{location}",
       formData?.location.label
@@ -67,25 +72,46 @@ function CreateTrip() {
       .replace("{budget}", formData?.budget)
       .replace("{totalDays}", formData?.noOfDays);
 
-    console.log(FINAL_PROMPT);
+    // console.log(FINAL_PROMPT);
     const result = await chatSession.sendMessage(FINAL_PROMPT);
 
-    console.log(result?.response?.text());
+    // console.log("--", result?.response?.text());
+    setLoading(false);
+    SaveAITrip(result?.response?.text());
   };
 
-  const getUserProfile=(tokenInfo)=>{
-    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`, {
-      headers:{
-        Authorization: `Bearer ${tokenInfo?.access_token}`,
-        Accept: 'Application/json'
-      }
-    }).then((resp)=>{
-      console.log(resp);
-      localStorage.setItem('user', JSON.stringify(resp.data));
-      setOpenDialog(false);
-      onGenerateTrip();
-    })
-  }
+  const SaveAITrip = async (TripData) => {
+    // console.log(TripData);
+    setLoading(true);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const docId = Date.now().toString();
+    await setDoc(doc(db, "AITrips", docId), {
+      userSelection: formData,
+      tripData: JSON.parse(TripData),
+      userEmail: user?.email,
+      id: docId,
+    });
+    setLoading(false);
+  };
+
+  const getUserProfile = (tokenInfo) => {
+    axios
+      .get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${tokenInfo?.access_token}`,
+            Accept: "Application/json",
+          },
+        }
+      )
+      .then((resp) => {
+        console.log(resp);
+        localStorage.setItem("user", JSON.stringify(resp.data));
+        setOpenDialog(false);
+        onGenerateTrip();
+      });
+  };
 
   return (
     <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
@@ -169,7 +195,13 @@ function CreateTrip() {
         </div>
 
         <div className="my-50 justify-end flex">
-          <Button onClick={onGenerateTrip}>Generate Trip</Button>
+          <Button disabled={loading} onClick={onGenerateTrip}>
+            {loading ? (
+              <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" />
+            ) : (
+              "Generate Trip"
+            )}
+          </Button>
         </div>
 
         <Dialog open={openDialog}>
