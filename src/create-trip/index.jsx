@@ -23,9 +23,7 @@ import axios from "axios";
 
 function CreateTrip() {
   const [place, setPlace] = useState();
-
   const [formData, setFormData] = useState([]);
-
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleInputChange = (name, value) => {
