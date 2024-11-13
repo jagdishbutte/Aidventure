@@ -232,6 +232,7 @@ function CreateTrip() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+        
       </div>
     </div>
   );
