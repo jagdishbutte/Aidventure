@@ -11,9 +11,9 @@ function PlacesToVisit({trip}) {
                     <h2 className='font-medium text-lg mt-5'>Day {item.day}</h2>
                     <div className='grid md:grid-cols-2 gap-5'>
                     {item.plan.map((place, index)=>(
-                        <div className=''>
+                        <div>
                             <h2 className='font-medium text-sm text-orange-600'>{place.time}</h2>
-                            <PlaceCardItem place={place}/>
+                            <PlaceCardItem key={index} place={place}/>
                         </div>
                     ))}
                     </div>
