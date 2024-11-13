@@ -21,7 +21,7 @@ function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [openDialog, setOpenDialog] = useState(false);
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
   }, [user]);
 
   const login = useGoogleLogin({
@@ -56,6 +56,11 @@ function Header() {
             <a href="/my-trips">
               <Button variant="outline" className="rounded-full text-black bg-gray-300 focus:outline-none border-none">
                 My Trips
+              </Button>
+            </a>
+            <a href="/create-trip">
+              <Button variant="outline" className="rounded-full text-black bg-gray-300 focus:outline-none border-none">
+                Create New Trip
               </Button>
             </a>
             <Popover>
