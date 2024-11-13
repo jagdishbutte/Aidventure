@@ -11,11 +11,11 @@ function Hero() {
         <p className='text-xl text-gray-500 text-center'>
             Your personal trip planner and travel curator, creating custom itineraries tailored to your interests and budget.
         </p>
-        <Link to={'/create-trip'}>
+        <Link to={'/create-trip'} className='cursor-pointer'>
             <Button>Get Started,  Its Free</Button>
         </Link> 
 
-        <img src="\landing.png" className='-mt-20' />
+        <img src="\landing.png"/>
     </div>
   )
 }
