@@ -24,6 +24,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { db } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import JotformAgent from "../../jotform-agent";
 
 function CreateTrip() {
   const [place, setPlace] = useState();
@@ -197,8 +198,12 @@ function CreateTrip() {
           </div>
         </div>
 
-        <div className="my-50 justify-end flex">
-          <Button disabled={loading} onClick={onGenerateTrip}>
+        <div className="my-50 justify-center flex mb-6">
+          <Button
+            disabled={loading}
+            onClick={onGenerateTrip}
+            className="px-4 py-2"
+          >
             {loading ? (
               <AiOutlineLoading3Quarters className="h-7 w-7 animate-spin" />
             ) : (
@@ -206,15 +211,18 @@ function CreateTrip() {
             )}
           </Button>
         </div>
+        <div>
+          {/* <JotformAgent /> */}
+        </div>
 
-        <Dialog open={openDialog}>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="sr-only">
                 Are you absolutely sure?
               </DialogTitle>
               <DialogDescription>
-                <img src="/logo.svg" />
+                <img src="/logo2.png" className="h-12 w-44" />
                 <>
                   <h2 className="font-bold text-lg mt-7">
                     Sign In With Google
@@ -232,7 +240,6 @@ function CreateTrip() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
-        
       </div>
     </div>
   );

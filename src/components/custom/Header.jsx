@@ -49,7 +49,12 @@ function Header() {
 
   return (
     <div className="p-2 shadow-lg flex items-center justify-between px-3">
-      <img src="/logo.svg" alt="Company Logo" />
+      <img
+        src="/logo2.png"
+        className="h-10 w-40"
+        alt="Company Logo"
+        onClick={() => (window.location.href = "/")}
+      />
       <div>
         {user ? (
           <div className="flex items-center gap-3">
@@ -76,7 +81,7 @@ function Header() {
                   onClick={() => {
                     googleLogout();
                     localStorage.clear();
-                    window.location.reload();
+                    window.location.href = "/";
                   }}
                 >
                   Logout

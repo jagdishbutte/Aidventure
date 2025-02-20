@@ -7,6 +7,7 @@ import Hotels from '../components/Hotels';
 import PlacesToVisit from '../components/PlacesToVisit';
 import Footer from '../components/Footer';
 import InfoSection from '../components/InfoSection';
+import JotFormAgent from '../../../jotform-agent';
 
 function Viewtrip() {
     const {tripId} = useParams();
@@ -37,6 +38,7 @@ function Viewtrip() {
         <InfoSection trip={trip}/>
         <Hotels trip={trip}/>
         <PlacesToVisit trip={trip}/>
+        {/* <JotFormAgent /> */}
         <Footer trip={trip}/>
     </div>
   )
